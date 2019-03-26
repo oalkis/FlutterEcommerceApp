@@ -47,7 +47,7 @@ class Category extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       
-      //InkWell --> Buton gibi tıklamamızı sağlıyor.
+      //InkWell --> Buton özelliği sağlıyor
       child: InkWell(
         onTap: () {},
         child: Container(

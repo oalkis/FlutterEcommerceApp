@@ -27,6 +27,7 @@ class _ProductsState extends State<Products> {
       "price": "80.00"
     }
   ];
+  
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -36,10 +37,12 @@ class _ProductsState extends State<Products> {
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
           return SingleProd(
+            
               prodName: productList[index]['name'],
               prodPicture: productList[index]['picture'],
               prodOldPrice: productList[index]['oldPrice'],
               prodPrice: productList[index]['price']);
+              
         });
   }
 }
@@ -54,10 +57,8 @@ class SingleProd extends StatelessWidget {
       {this.prodName, this.prodPrice, this.prodOldPrice, this.prodPicture});
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 20,
-      width: 10,
-      child: Card(
+    return
+       Card(
         child: Hero(
           tag: prodName,
           child: Material(
@@ -97,7 +98,7 @@ class SingleProd extends StatelessWidget {
                     ),
                   ))),
         ),
-      ),
+      
     );
   }
 }
