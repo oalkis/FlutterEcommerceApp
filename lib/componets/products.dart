@@ -30,6 +30,7 @@ class _ProductsState extends State<Products> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      
         itemCount: productList.length,
         gridDelegate:
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
@@ -53,48 +54,49 @@ class SingleProd extends StatelessWidget {
       {this.prodName, this.prodPrice, this.prodOldPrice, this.prodPicture});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Hero(
-        tag: prodName,
-        child: Material(
-            child: InkWell(
-                onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                  //Passing the value
-                    builder: (context) => new ProductDetails(
-                      productDetailName: prodName,
-                      productDetailOldPrice: prodOldPrice,
-                      productDetailPicture: prodPicture,
-                      productDetailPrice: prodPrice,
-                    ))),
-                child: GridTile(
-                  footer: Container(
-                    color: Colors.white70,
-                    child: ListTile(
-                      leading: Text(
-                        prodName,
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
-                      ),
-                      title: Text(
-                        "\₺$prodPrice",
-                        style: TextStyle(
-                            color: Colors.red,fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.right,
-                      ),
-                      subtitle: Text(
-                        "\₺$prodOldPrice",
-                        style: TextStyle(
-                            color: Colors.grey[140],
-                            fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.lineThrough),
-                        textAlign: TextAlign.right,
-                      ),
+    return SizedBox(
+      height: 20,
+      width: 10,
+      child: Card(
+        child: Hero(
+          tag: prodName,
+          child: Material(
+              child: InkWell(
+                  onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                      //Passing the value
+                      builder: (context) => new ProductDetails(
+                            productDetailName: prodName,
+                            productDetailOldPrice: prodOldPrice,
+                            productDetailPicture: prodPicture,
+                            productDetailPrice: prodPrice,
+                          ))),
+                  child: GridTile(
+                    footer: Container(
+                        color: Colors.white70,
+                        child: new Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                prodName,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                            new Text(
+                              "\₺$prodPrice",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        )),
+                    child: Image.asset(
+                      prodPicture,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                  child: Image.asset(
-                    prodPicture,
-                    fit: BoxFit.cover,
-                  ),
-                ))),
+                  ))),
+        ),
       ),
     );
   }
