@@ -19,6 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_flipperkit: ^0.0.8
+
     
     
   carousel_pro: ^0.0.13 #no indention
