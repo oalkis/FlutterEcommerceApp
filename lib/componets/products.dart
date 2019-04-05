@@ -45,8 +45,8 @@ class _ProductsState extends State<Products> {
             
               prodName: productList[index].title,
               prodPicture: productList[index].image,
-              price: productList[index].price,
-              oldPrice: productList[index].oldPrice);
+              prodPrice: productList[index].price,
+              prodOldPrice: productList[index].oldPrice);
               
               
         });
@@ -56,12 +56,12 @@ class _ProductsState extends State<Products> {
 class SingleProd extends StatelessWidget {
   final prodName;
   final prodPicture;
-  final oldPrice;
-  final price;
-  final isActive;
+  final prodOldPrice;
+  final prodPrice;
+  final prodIsActive;
   
   SingleProd(
-      {this.prodName, this.prodPicture,this.oldPrice,this.isActive,this.price});
+      {this.prodName, this.prodPicture,this.prodOldPrice,this.prodIsActive,this.prodPrice});
   @override
   Widget build(BuildContext context) {
     return
@@ -75,6 +75,8 @@ class SingleProd extends StatelessWidget {
                       builder: (context) => new ProductDetails(
                             productDetailName: prodName,
                             productDetailPicture: prodPicture,
+                            productDetailOldPrice: prodOldPrice,
+                            productDetailPrice: prodPrice,
                            
                           ))),
                   child: GridTile(
@@ -91,7 +93,7 @@ class SingleProd extends StatelessWidget {
                               ),
                             ),
                             new Text(
-                              "\$$price",
+                              "\$$prodPrice",
                               style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold),
