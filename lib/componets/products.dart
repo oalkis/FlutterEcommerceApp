@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopapp/pages/product_details.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Products extends StatefulWidget {
   @override
@@ -7,29 +9,32 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  var productList = [
-    {
-      "name": "Blazer",
-      "picture": "assets/images/products/blazer.jpg",
-      "oldPrice": "30.00",
-      "price": "20.00"
-    },
-    {
-      "name": "Skirt",
-      "picture": "assets/images/products/skirt.jpg",
-      "oldPrice": "25.00",
-      "price": "20.00"
-    },
-    {
-      "name": "Dress",
-      "picture": "assets/images/products/dress.jpg",
-      "oldPrice": "85.00",
-      "price": "80.00"
+    List<Product> productList = List();
+  var isLoading = false;
+  _fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+    final response =
+        await http.get("https://api.jsonbin.io/b/5ca770690f4c9334823b0211");
+    if (response.statusCode == 200) {
+      productList = (json.decode(response.body) as List)
+          .map((data) => new Product.fromJson(data))
+          .toList();
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      throw Exception('Failed to load products');
     }
-  ];
+  }
+  
   
   @override
+  
   Widget build(BuildContext context) {
+        _fetchData();
+
     return GridView.builder(
       
         itemCount: productList.length,
@@ -38,10 +43,11 @@ class _ProductsState extends State<Products> {
         itemBuilder: (BuildContext context, int index) {
           return SingleProd(
             
-              prodName: productList[index]['name'],
-              prodPicture: productList[index]['picture'],
-              prodOldPrice: productList[index]['oldPrice'],
-              prodPrice: productList[index]['price']);
+              prodName: productList[index].title,
+              prodPicture: productList[index].image,
+              price: productList[index].price,
+              oldPrice: productList[index].oldPrice);
+              
               
         });
   }
@@ -50,11 +56,12 @@ class _ProductsState extends State<Products> {
 class SingleProd extends StatelessWidget {
   final prodName;
   final prodPicture;
-  final prodOldPrice;
-  final prodPrice;
-
+  final oldPrice;
+  final price;
+  final isActive;
+  
   SingleProd(
-      {this.prodName, this.prodPrice, this.prodOldPrice, this.prodPicture});
+      {this.prodName, this.prodPicture,this.oldPrice,this.isActive,this.price});
   @override
   Widget build(BuildContext context) {
     return
@@ -67,9 +74,8 @@ class SingleProd extends StatelessWidget {
                       //Passing the value
                       builder: (context) => new ProductDetails(
                             productDetailName: prodName,
-                            productDetailOldPrice: prodOldPrice,
                             productDetailPicture: prodPicture,
-                            productDetailPrice: prodPrice,
+                           
                           ))),
                   child: GridTile(
                     footer: Container(
@@ -85,7 +91,7 @@ class SingleProd extends StatelessWidget {
                               ),
                             ),
                             new Text(
-                              "\₺$prodPrice",
+                              "\$$price",
                               style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold),
@@ -94,11 +100,31 @@ class SingleProd extends StatelessWidget {
                         )),
                     child: Image.asset(
                       prodPicture,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitHeight,
                     ),
                   ))),
         ),
       
+    );
+  }
+}
+class Product {
+  final String title;
+  final String image;
+  final int categoryId;
+  final int oldPrice;
+  final int price;
+  final bool isActive;
+
+  Product._({this.title, this.image,this.categoryId,this.isActive,this.price,this.oldPrice});
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return new Product._(
+      title: json['title'],
+      image: json['image'],
+      categoryId: json['categoryId'],
+      oldPrice: json['oldPrice'],
+      price:json['price'],
+      isActive: json['isActive']
     );
   }
 }

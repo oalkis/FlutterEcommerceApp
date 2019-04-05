@@ -9,7 +9,7 @@ class _CartProductState extends State<CartProduct> {
   var productsOnTheCart = [
     {
       "name": "Blazer",
-      "picture": "assets/images/products/blazer.jpg",
+      "picture": "assets/images/product/dress/aeropostaledress.jpg",
       "price": 20.00,
       "size": "M",
       "color": "red",

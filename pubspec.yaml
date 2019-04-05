@@ -53,8 +53,14 @@ flutter:
   assets:
      - assets/images/categories/
      - assets/images/products/
+     - assets/images/product/
+     - assets/images/product/dress/
+     - assets/images/product/jean/
+     - assets/images/product/shirt/
+     - assets/images/product/skirt/
+     - assets/images/product/tshirt/
+     - assets/images/product/jacket/
      - assets/images/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 
