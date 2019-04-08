@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shopapp/componets/horizontal_listview.dart';
 import 'package:shopapp/componets/products.dart';
 import 'package:shopapp/pages/cart.dart';
+import 'package:shopapp/pages/product_details.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -178,20 +180,8 @@ class _HomePageState extends State<HomePage> {
 
 //Search Part
 class _SearchSearchDelegate extends SearchDelegate<String> {
-
-  final List<String> _data = <String>[
-    "red dress",
-    "black t-shirt",
-    "white sock"
-  ];
-  final List<String> _history = <String>[
-    "skirt",
-    "red",
-    "t-shirt",
-    "black",
-    "dress"
-  ];
- 
+  final List<Product> _data = productList;
+  final List<Product> _history = productList;
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -209,24 +199,48 @@ class _SearchSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final Iterable<String> suggestions = query.isEmpty
-        ? _history
-        : _data.where((String i) => '$i'.startsWith(query));
-
-    return new _SuggestionList(
-      query: query,
-      suggestions: suggestions.map((String i) => '$i').toList(),
-      onSelected: (String suggestion) {
-        query = suggestion;
-        showResults(context);
-      },
-    );
+    if (query.isEmpty) {
+      return new Center(
+        child: new Text(
+          '"$query"\n We do not find anything to show here\nTry again.',
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else if (_data
+        .where((x) => x.title.toLowerCase().contains(query.toLowerCase()))
+        .isEmpty) {
+      return new Center(
+        child: new Text(
+          '"$query"\n We do not find anything to show here\nTry again.',
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      final Iterable<Product> suggestions = _data
+          .where((x) => x.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      return new _SuggestionList(
+        product: _data.firstWhere(
+            (x) => x.title.toLowerCase().contains(query.toLowerCase())),
+        query: query,
+        suggestions: suggestions.map((x) => x.title).toList(),
+        onSelected: (String suggestion) {
+          query = suggestion;
+          showResults(context);
+        },
+      );
+    }
+    
   }
 
   @override
   Widget buildResults(BuildContext context) {
     final String searched = query;
-    if (searched == null || !_data.contains(searched)) {
+
+    if (searched == null ||
+        !_data
+            .map((x) => x.title.toLowerCase())
+            .contains(searched.toLowerCase())) {
       return new Center(
         child: new Text(
           '"$query"\n We do not find anything to show here\nTry again.',
@@ -269,44 +283,14 @@ class _SearchSearchDelegate extends SearchDelegate<String> {
   }
 }
 
-class _ResultCard extends StatelessWidget {
-  const _ResultCard({this.searchWord, this.title, this.searchDelegate});
-
-  final String searchWord;
-  final String title;
-  final SearchDelegate<String> searchDelegate;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return new GestureDetector(
-      onTap: () {
-        searchDelegate.close(context, searchWord);
-      },
-      child: new Card(
-        child: new Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: new Column(
-            children: <Widget>[
-              new Text(title),
-              new Text(
-                '$searchWord',
-                style: theme.textTheme.headline.copyWith(fontSize: 72.0),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _SuggestionList extends StatelessWidget {
-  const _SuggestionList({this.suggestions, this.query, this.onSelected});
+  const _SuggestionList(
+      {this.suggestions, this.query, this.onSelected, this.product});
 
   final List<String> suggestions;
   final String query;
   final ValueChanged<String> onSelected;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -319,22 +303,45 @@ class _SuggestionList extends StatelessWidget {
           leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
           title: new RichText(
             text: new TextSpan(
-              text: suggestion.substring(0, query.length),
+              text: suggestion,
               style:
-                  theme.textTheme.subhead.copyWith(fontWeight: FontWeight.bold),
-              children: <TextSpan>[
-                new TextSpan(
-                  text: suggestion.substring(query.length),
-                  style: theme.textTheme.subhead,
-                ),
-              ],
+                  theme.textTheme.subhead,
             ),
           ),
-          onTap: () {
-            onSelected(suggestion);
-          },
+          onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+              //Passing the value
+              builder: (context) => new ProductDetails(
+                    productDetailName: product.title,
+                    productDetailPicture: product.image,
+                    productDetailOldPrice: product.oldPrice,
+                    productDetailPrice: product.price,
+                  ))),
         );
       },
     );
+  }
+}
+
+class _ResultCard extends StatelessWidget {
+  const _ResultCard(
+      {this.searchWord, this.title, this.searchDelegate, this.product});
+
+  final String searchWord;
+  final String title;
+  final SearchDelegate<String> searchDelegate;
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+        onTap: () {
+          searchDelegate.close(context, searchWord);
+        },
+        child: ProductDetails(
+          productDetailName: product.title,
+          productDetailPrice: product.price,
+          productDetailOldPrice: product.oldPrice,
+          productDetailPicture: product.image,
+        ));
   }
 }

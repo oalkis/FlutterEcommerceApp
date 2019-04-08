@@ -7,9 +7,9 @@ class Products extends StatefulWidget {
   @override
   _ProductsState createState() => _ProductsState();
 }
+    List<Product> productList = List();
 
 class _ProductsState extends State<Products> {
-    List<Product> productList = List();
   var isLoading = false;
   _fetchData() async {
     setState(() {
