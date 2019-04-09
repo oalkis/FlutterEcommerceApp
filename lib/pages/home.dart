@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
 //Search Part
 class _SearchSearchDelegate extends SearchDelegate<String> {
   final List<Product> _data = productList;
-  final List<Product> _history = productList;
+ 
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -223,14 +223,13 @@ class _SearchSearchDelegate extends SearchDelegate<String> {
         product: _data.firstWhere(
             (x) => x.title.toLowerCase().contains(query.toLowerCase())),
         query: query,
-        suggestions: suggestions.map((x) => x.title).toList(),
+        suggestions: suggestions.toList(),
         onSelected: (String suggestion) {
           query = suggestion;
           showResults(context);
         },
       );
     }
-    
   }
 
   @override
@@ -251,10 +250,9 @@ class _SearchSearchDelegate extends SearchDelegate<String> {
 
     return new ListView(
       children: <Widget>[
-        new _ResultCard(
-          title: 'Search Result',
-          searchWord: searched,
-          searchDelegate: this,
+        new ListTile(
+          leading: Text('Search Result'),
+          title: Text(searched),
         ),
       ],
     );
@@ -287,7 +285,7 @@ class _SuggestionList extends StatelessWidget {
   const _SuggestionList(
       {this.suggestions, this.query, this.onSelected, this.product});
 
-  final List<String> suggestions;
+  final List<Product> suggestions;
   final String query;
   final ValueChanged<String> onSelected;
   final Product product;
@@ -298,15 +296,22 @@ class _SuggestionList extends StatelessWidget {
     return new ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (BuildContext context, int i) {
-        final String suggestion = suggestions[i];
+        final String suggestion = suggestions[i].title;
+        final Image productImage = Image.asset(
+          suggestions[i].image,
+          height: 70,
+        );
+        final double productPrice = suggestions[i].price;
         return new ListTile(
-          leading: query.isEmpty ? const Icon(Icons.history) : const Icon(null),
+          leading: query.isEmpty ? const Icon(Icons.history) : productImage,
           title: new RichText(
             text: new TextSpan(
               text: suggestion,
-              style:
-                  theme.textTheme.subhead,
+              style: theme.textTheme.subhead,
             ),
+          ),
+          subtitle: new Text(
+            "\$$productPrice",style: TextStyle(fontWeight: FontWeight.bold),
           ),
           onTap: () => Navigator.of(context).push(new MaterialPageRoute(
               //Passing the value
@@ -319,29 +324,5 @@ class _SuggestionList extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class _ResultCard extends StatelessWidget {
-  const _ResultCard(
-      {this.searchWord, this.title, this.searchDelegate, this.product});
-
-  final String searchWord;
-  final String title;
-  final SearchDelegate<String> searchDelegate;
-  final Product product;
-
-  @override
-  Widget build(BuildContext context) {
-    return new GestureDetector(
-        onTap: () {
-          searchDelegate.close(context, searchWord);
-        },
-        child: ProductDetails(
-          productDetailName: product.title,
-          productDetailPrice: product.price,
-          productDetailOldPrice: product.oldPrice,
-          productDetailPicture: product.image,
-        ));
   }
 }

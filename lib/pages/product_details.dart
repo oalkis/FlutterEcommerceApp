@@ -7,9 +7,11 @@ class ProductDetails extends StatefulWidget {
   final productDetailPrice;
   final productDetailOldPrice;
   final productDetailPicture;
+  final List<String> productDetailSize;
 
   ProductDetails(
       {this.productDetailName,
+      this.productDetailSize,
       this.productDetailOldPrice,
       this.productDetailPicture,
       this.productDetailPrice});
@@ -18,13 +20,12 @@ class ProductDetails extends StatefulWidget {
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
-
-
 class _ProductDetailsState extends State<ProductDetails> {
+  int quantity;
+  String size;
   @override
-  
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: new AppBar(
         backgroundColor: Colors.red,
         title: InkWell(
@@ -54,159 +55,86 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: Image.asset(widget.productDetailPicture),
                 ),
                 footer: Container(
+                  //padding: EdgeInsets.only(left:90),
                   color: Colors.white70,
-                  child: Column(children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Divider(color: Colors.transparent,),
+                  child:  Padding(
+                           padding: EdgeInsets.only(left:100),
+                           child: Column(children: <Widget>[
+                    Row(children: <Widget>[
+                      new Text(
+                          widget.productDetailName,
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.bold),
                         ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              widget.productDetailName,
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: new Text(
+                      
+                    ]),
+                    Row(children: <Widget>[
+                      
+                       
+                    
+                            new Text(
+                              
                               "₺${widget.productDetailPrice}",
                               style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.red),
-                            ),
+                                  ),
+                            
                           ),
+                     
+                           Divider(indent: 10,),
+                        new Text(
+                          "₺${widget.productDetailOldPrice}",
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey),
                         ),
-                        Expanded(
-                          child: Divider(color: Colors.transparent,),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Divider(color: Colors.transparent,),
-                        ),
-                        Expanded(
-                          child: Divider(color: Colors.transparent,),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: new Text(
-                              "₺${widget.productDetailOldPrice}",
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(color: Colors.transparent,),
-                        )
-                      ],
-                    ),
+                    ])
                   ]),
                 )),
-          ),
+          )),
           Row(
             children: <Widget>[
               //====================== the size button ====================
 
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return new AlertDialog(
-                            title: new Text("Size"),
-                            content: new Text("Choose the size"),
-                            actions: <Widget>[
-                              new MaterialButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(context);
-                                },
-                                child: new Text("close"),
-                              )
-                            ],
-                          );
-                        });
-                  },
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: new Text("Size"),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
+              Expanded(child:
+                Padding(padding: EdgeInsets.only(left:8),
                 child: MaterialButton(
                   onPressed: () {},
                   color: Colors.white,
                   textColor: Colors.grey,
+                  splashColor: Colors.blue,
                   elevation: 0.2,
                   child: Row(
                     children: <Widget>[
+                      Expanded(child: new Text("Size"),),
                       Expanded(
-                        child: new DropdownButton<String>(
-                          items:
-                              <String>["1", "2", "3", "4"].map((String value) {
+                        child: new DropdownButton<String>(value:size ,
+                          hint: Text("Size"),
+                          items: widget.productDetailSize.map((size) {
                             return new DropdownMenuItem<String>(
-                              value: value,
-                              child: new Text(value),
+                              value: size,
+                              child: new Text(
+                                size,
+                                style: TextStyle(fontSize: 10),
+                              ),
                             );
                           }).toList(),
-                          onChanged: (_) {},
+                          onChanged: (String newValue) {
+                            setState(() {
+                              size = newValue;
+                            });
+                          },
                         ),
                       )
                     ],
                   ),
                 ),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return new AlertDialog(
-                              title: new Text("Color"),
-                              content: new Text("Choose to color"),
-                              actions: <Widget>[
-                                new MaterialButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(context);
-                                  },
-                                  child: new Text("close"),
-                                )
-                              ]);
-                        });
-                  },
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: new Text("Color"),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
+              )),
+             Expanded(child:
+                Padding(padding: EdgeInsets.only(right:4),
                 child: MaterialButton(
                   onPressed: () {},
                   color: Colors.white,
@@ -214,79 +142,32 @@ class _ProductDetailsState extends State<ProductDetails> {
                   elevation: 0.2,
                   child: Row(
                     children: <Widget>[
+                       Expanded(child: new Text("Quantity"),),
+
                       Expanded(
-                        child: new DropdownButton<String>(
-                          items: <String>[
-                            "A",
-                            "B",
-                            "C",
-                          ].map((String value) {
-                            return new DropdownMenuItem<String>(
-                              value: value,
-                              child: new Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (_) {},
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return new AlertDialog(
-                              title: new Text("Quantity"),
-                              content: new Text("Choose to quantity"),
-                              actions: <Widget>[
-                                new MaterialButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(context);
-                                  },
-                                  child: new Text("close"),
-                                )
-                              ]);
-                        });
-                  },
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: new Text("Qty"),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  elevation: 0.2,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
+                        
                         child: new DropdownButton<int>(
-                          items: <int>[1, 2, 3, 4, 5, 6].map((int value) {
+                        elevation: 0,
+                          value: quantity,
+                          hint: new Text("Quantity"),
+                          items: <int>[1, 2, 3, 4, 5, 6].map((quantity) {
                             return new DropdownMenuItem<int>(
-                              value: value,
-                              child: new Text(value.toString()),
+                              value: quantity,
+                              child: new Text(quantity.toString()),
                             );
                           }).toList(),
-                          onChanged: (_) {},
+                          onChanged: (int newValue) {
+                            setState(() {
+                              quantity = newValue;
+                            });
+                          },
                         ),
                       )
                     ],
                   ),
                 ),
               ),
-            ],
+              ) ],
           ),
           Row(children: <Widget>[
             //====================== the size button ====================
@@ -313,17 +194,13 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           Divider(),
           ListTile(
-            title:new Text("Similiar Products"),
-            subtitle: new Container(height: 190,
-            child: SimilarProduct(),
-
+            title: new Text("Similiar Products"),
+            subtitle: new Container(
+              height: 190,
+              child: SimilarProduct(),
             ),
           ),
-    
-                    Divider(),
-
-            
-          
+          Divider(),
         ],
       ),
     );
@@ -336,7 +213,7 @@ class SimilarProduct extends StatefulWidget {
 }
 
 class _SimilarProductState extends State<SimilarProduct> {
- var productList = [
+  var productList = [
     {
       "name": "Blazer",
       "picture": "assets/images/products/blazer.jpg",
@@ -354,22 +231,26 @@ class _SimilarProductState extends State<SimilarProduct> {
       "picture": "assets/images/products/dress.jpg",
       "oldPrice": "85.00",
       "price": "80.00"
-    },{
+    },
+    {
       "name": "Dress",
       "picture": "assets/images/products/dress.jpg",
       "oldPrice": "85.00",
       "price": "80.00"
-    },{
+    },
+    {
       "name": "Dress",
       "picture": "assets/images/products/dress.jpg",
       "oldPrice": "85.00",
       "price": "80.00"
-    },{
+    },
+    {
       "name": "Dress",
       "picture": "assets/images/products/dress.jpg",
       "oldPrice": "85.00",
       "price": "80.00"
-    },{
+    },
+    {
       "name": "Dress",
       "picture": "assets/images/products/dress.jpg",
       "oldPrice": "85.00",
@@ -380,8 +261,9 @@ class _SimilarProductState extends State<SimilarProduct> {
   Widget build(BuildContext context) {
     return GridView.builder(
         itemCount: productList.length,
-         scrollDirection: Axis.horizontal,
-addSemanticIndexes: true,        gridDelegate:
+        scrollDirection: Axis.horizontal,
+        addSemanticIndexes: true,
+        gridDelegate:
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
         itemBuilder: (BuildContext context, int index) {
           return SimilarProducts(
@@ -392,6 +274,7 @@ addSemanticIndexes: true,        gridDelegate:
         });
   }
 }
+
 class SimilarProducts extends StatelessWidget {
   final prodName;
   final prodPicture;
@@ -404,27 +287,38 @@ class SimilarProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Hero(
-
         tag: new Text(prodName),
-        child: Material( 
+        child: Material(
             child: InkWell(
                 onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                  //Passing the value
+                    //Passing the value
                     builder: (context) => new ProductDetails(
-                      productDetailName: prodName,
-                      productDetailOldPrice: prodOldPrice,
-                      productDetailPicture: prodPicture,
-                      productDetailPrice: prodPrice,
-                    ))),
+                          productDetailName: prodName,
+                          productDetailOldPrice: prodOldPrice,
+                          productDetailPicture: prodPicture,
+                          productDetailPrice: prodPrice,
+                        ))),
                 child: GridTile(
                   footer: Container(
-                    color: Colors.white70,
-                    child: new Row(children: <Widget>[
-                      Expanded(child: Text(prodName,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12.0),),
-                      ),
-                      new Text("\₺$prodPrice",style: TextStyle(color:Colors.red,fontSize: 10.0,fontWeight: FontWeight.bold),)
-                    ],)
-                  ),
+                      color: Colors.white70,
+                      child: new Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              prodName,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12.0),
+                            ),
+                          ),
+                          new Text(
+                            "\₺$prodPrice",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 10.0,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      )),
                   child: Image.asset(
                     prodPicture,
                     fit: BoxFit.cover,

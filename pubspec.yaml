@@ -61,6 +61,7 @@ flutter:
      - assets/images/product/tshirt/
      - assets/images/product/jacket/
      - assets/images/
+     - assets/database/db.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 
